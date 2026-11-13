@@ -1,23 +1,10 @@
-# No dot-directories except github/vscode
-.*/
-!.vscode/
-!.github/
-
-*.code-workspace
-node_modules
-nbproject
-
-# npm package files
-iobroker.*.tgz
-
-Thumbs.db
-
-# i18n intermediate files
-admin/i18n/flat.txt
-admin/i18n/*/flat.txt
-# Python / HA integration dev
+# Python / Home Assistant integration
 .venv/
 __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
