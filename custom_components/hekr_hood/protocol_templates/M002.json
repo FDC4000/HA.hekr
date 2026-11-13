@@ -1,0 +1,808 @@
+{
+  "mid": "bIwgMIn9xnhD",
+  "pid": "01059462181",
+  "createTime": 1524563952678,
+  "protocol": {
+    "0": {
+      "cmdId": 0,
+      "cmdTag": "queryDev",
+      "desc": "查询设备状态",
+      "frameType": 2,
+      "tags": [],
+      "fields": [],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "1": {
+      "cmdId": 1,
+      "cmdTag": "reportDev",
+      "desc": "设备上报状态",
+      "frameType": 1,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "sw",
+          "desc": "总开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 0,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "light_Sw",
+          "desc": "灯开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 1,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "speed",
+          "desc": "风速",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 2,
+          "maxValue": 4,
+          "minValue": 0,
+          "maxValueMean": "最大档",
+          "minValueMean": "最小档",
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "Statue",
+          "desc": "状态显示",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 5,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "睡眠状态"
+            },
+            {
+              "value": 1,
+              "desc": "待机状态"
+            },
+            {
+              "value": 2,
+              "desc": "开机状态"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "tm_Minutes",
+          "desc": "定时时间",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 3,
+          "maxValue": 60,
+          "minValue": 0,
+          "maxValueMean": "60分钟",
+          "minValueMean": "0分钟",
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "fitter",
+          "desc": "滤网清洗更换",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 4,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "不提醒"
+            },
+            {
+              "value": 1,
+              "desc": "请清洗更换滤网"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "R",
+          "desc": "红色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 6,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "G",
+          "desc": "绿色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 7,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "B",
+          "desc": "蓝色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 8,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "cleaning",
+          "desc": "清洁复位键",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 17,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "RGB_Sw",
+          "desc": "RGB开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 19,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        }
+      ],
+      "associateProtocol": [],
+      "usedForIFTTT": false
+    },
+    "2": {
+      "cmdId": 2,
+      "cmdTag": "set_Sw",
+      "desc": "开关设置",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "sw",
+          "desc": "总开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 0,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        }
+      ],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "3": {
+      "cmdId": 3,
+      "cmdTag": "set_LightSw",
+      "desc": "灯开关设置",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "light_Sw",
+          "desc": "灯开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 1,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        }
+      ],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "4": {
+      "cmdId": 4,
+      "cmdTag": "Set_Speed",
+      "desc": "风速设置",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "speed",
+          "desc": "风速",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 2,
+          "maxValue": 4,
+          "minValue": 0,
+          "maxValueMean": "最大档",
+          "minValueMean": "最小档",
+          "enumeration": []
+        }
+      ],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "5": {
+      "cmdId": 5,
+      "cmdTag": "set_Tm",
+      "desc": "定时设置",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "tm_Minutes",
+          "desc": "定时时间",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 3,
+          "maxValue": 60,
+          "minValue": 0,
+          "maxValueMean": "60分钟",
+          "minValueMean": "0分钟",
+          "enumeration": []
+        }
+      ],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "6": {
+      "cmdId": 6,
+      "cmdTag": "rest_Cleaning",
+      "desc": "清洁复位",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "cleaning",
+          "desc": "清洁复位键",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 17,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        }
+      ],
+      "associateProtocol": [],
+      "usedForIFTTT": false
+    },
+    "7": {
+      "cmdId": 7,
+      "cmdTag": "set_Rgbw",
+      "desc": "设置灯光颜色",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "RGB_Sw",
+          "desc": "RGB开关",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 19,
+          "enumeration": [
+            {
+              "value": 0,
+              "desc": "关"
+            },
+            {
+              "value": 1,
+              "desc": "开"
+            }
+          ]
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "R",
+          "desc": "红色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 6,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "G",
+          "desc": "绿色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 7,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "B",
+          "desc": "蓝色",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 8,
+          "maxValue": 255,
+          "minValue": 0,
+          "enumeration": []
+        }
+      ],
+      "associateProtocol": [
+        1
+      ],
+      "usedForIFTTT": false
+    },
+    "8": {
+      "cmdId": 8,
+      "cmdTag": "timing_Set",
+      "desc": "授时",
+      "frameType": 2,
+      "tags": [],
+      "fields": [
+        {
+          "dataType": "NUMBER",
+          "name": "hour",
+          "desc": "授时小时",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 14,
+          "maxValue": 23,
+          "minValue": 0,
+          "maxValueMean": "23时",
+          "minValueMean": "0时",
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "minute",
+          "desc": "授时分钟",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 15,
+          "maxValue": 59,
+          "minValue": 0,
+          "maxValueMean": "59分",
+          "minValueMean": "0分",
+          "enumeration": []
+        },
+        {
+          "dataType": "NUMBER",
+          "name": "second",
+          "desc": "授时秒",
+          "dataLength": 1,
+          "available": true,
+          "frameType": "UP_DOWN",
+          "baseField": false,
+          "usedForIFTTT": false,
+          "aggregation": false,
+          "order": 18,
+          "maxValue": 59,
+          "minValue": 0,
+          "maxValueMean": "59秒",
+          "minValueMean": "0秒",
+          "enumeration": []
+        }
+      ],
+      "associateProtocol": [],
+      "usedForIFTTT": false
+    }
+  },
+  "workModeType": "JSON_TRANSPARENT",
+  "fixedLength": false,
+  "statistics": true,
+  "fieldMap": {
+    "sw": {
+      "dataType": "NUMBER",
+      "name": "sw",
+      "desc": "总开关",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 0,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "关"
+        },
+        {
+          "value": 1,
+          "desc": "开"
+        }
+      ]
+    },
+    "fitter": {
+      "dataType": "NUMBER",
+      "name": "fitter",
+      "desc": "滤网清洗更换",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 4,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "不提醒"
+        },
+        {
+          "value": 1,
+          "desc": "请清洗更换滤网"
+        }
+      ]
+    },
+    "tm_Minutes": {
+      "dataType": "NUMBER",
+      "name": "tm_Minutes",
+      "desc": "定时时间",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 3,
+      "maxValue": 60,
+      "minValue": 0,
+      "maxValueMean": "60分钟",
+      "minValueMean": "0分钟",
+      "enumeration": []
+    },
+    "R": {
+      "dataType": "NUMBER",
+      "name": "R",
+      "desc": "红色",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 6,
+      "maxValue": 255,
+      "minValue": 0,
+      "enumeration": []
+    },
+    "G": {
+      "dataType": "NUMBER",
+      "name": "G",
+      "desc": "绿色",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 7,
+      "maxValue": 255,
+      "minValue": 0,
+      "enumeration": []
+    },
+    "B": {
+      "dataType": "NUMBER",
+      "name": "B",
+      "desc": "蓝色",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 8,
+      "maxValue": 255,
+      "minValue": 0,
+      "enumeration": []
+    },
+    "hour": {
+      "dataType": "NUMBER",
+      "name": "hour",
+      "desc": "授时小时",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 14,
+      "maxValue": 23,
+      "minValue": 0,
+      "maxValueMean": "23时",
+      "minValueMean": "0时",
+      "enumeration": []
+    },
+    "minute": {
+      "dataType": "NUMBER",
+      "name": "minute",
+      "desc": "授时分钟",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 15,
+      "maxValue": 59,
+      "minValue": 0,
+      "maxValueMean": "59分",
+      "minValueMean": "0分",
+      "enumeration": []
+    },
+    "cleaning": {
+      "dataType": "NUMBER",
+      "name": "cleaning",
+      "desc": "清洁复位键",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 17,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "关"
+        },
+        {
+          "value": 1,
+          "desc": "开"
+        }
+      ]
+    },
+    "Statue": {
+      "dataType": "NUMBER",
+      "name": "Statue",
+      "desc": "状态显示",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 5,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "睡眠状态"
+        },
+        {
+          "value": 1,
+          "desc": "待机状态"
+        },
+        {
+          "value": 2,
+          "desc": "开机状态"
+        }
+      ]
+    },
+    "speed": {
+      "dataType": "NUMBER",
+      "name": "speed",
+      "desc": "风速",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 2,
+      "maxValue": 4,
+      "minValue": 0,
+      "maxValueMean": "最大档",
+      "minValueMean": "最小档",
+      "enumeration": []
+    },
+    "second": {
+      "dataType": "NUMBER",
+      "name": "second",
+      "desc": "授时秒",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 18,
+      "maxValue": 59,
+      "minValue": 0,
+      "maxValueMean": "59秒",
+      "minValueMean": "0秒",
+      "enumeration": []
+    },
+    "light_Sw": {
+      "dataType": "NUMBER",
+      "name": "light_Sw",
+      "desc": "灯开关",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 1,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "关"
+        },
+        {
+          "value": 1,
+          "desc": "开"
+        }
+      ]
+    },
+    "RGB_Sw": {
+      "dataType": "NUMBER",
+      "name": "RGB_Sw",
+      "desc": "RGB开关",
+      "dataLength": 1,
+      "frameType": "UP_DOWN",
+      "baseField": false,
+      "usedForIFTTT": false,
+      "aggregation": false,
+      "order": 19,
+      "enumeration": [
+        {
+          "value": 0,
+          "desc": "关"
+        },
+        {
+          "value": 1,
+          "desc": "开"
+        }
+      ]
+    }
+  },
+  "accessProtocol": 0
+}
