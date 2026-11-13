@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Hekr Hood",
+        "description": "Sign in with your Wisen / Hekr app account.",
+        "data": {
+          "username": "Email",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate",
+        "description": "Enter the password again for {username}.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password.",
+      "cannot_connect": "Failed to connect to the Hekr cloud.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Hekr Hood options",
+        "data": {
+          "use_udp": "Use local UDP control (send commands directly on the LAN)",
+          "checksum_mode": "Frame checksum mode"
+        },
+        "data_description": {
+          "use_udp": "When enabled, commands are sent to the device's LAN IP on UDP port 10000. Status always arrives via the cloud.",
+          "checksum_mode": "'Calculated' follows the official SDK. 'Zero' reproduces the original adapter (trailing 00) and is only for debugging."
+        }
+      }
+    }
+  },
+  "selector": {
+    "checksum_mode": {
+      "options": {
+        "calc": "Calculated (correct)",
+        "zero": "Zero (original adapter)"
+      }
+    }
+  },
+  "entity": {
+    "switch": {
+      "power": { "name": "Power" }
+    },
+    "light": {
+      "spotlight": { "name": "Spotlight" },
+      "rgb": { "name": "RGB light" }
+    },
+    "binary_sensor": {
+      "filter_change": { "name": "Filter change" }
+    },
+    "button": {
+      "reset_filter": { "name": "Reset filter reminder" }
+    },
+    "number": {
+      "auto_off": { "name": "Auto-off timer" }
+    },
+    "sensor": {
+      "operating_state": {
+        "name": "Operating state",
+        "state": {
+          "sleep": "Sleep",
+          "standby": "Standby",
+          "on": "On"
+        }
+      }
+    }
+  }
+}

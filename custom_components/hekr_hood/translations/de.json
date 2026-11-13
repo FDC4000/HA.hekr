@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Hekr Hood",
+        "description": "Mit deinem Wisen-/Hekr-App-Konto anmelden.",
+        "data": {
+          "username": "E-Mail",
+          "password": "Passwort"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Erneut anmelden",
+        "description": "Gib das Passwort für {username} erneut ein.",
+        "data": {
+          "password": "Passwort"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ungültige E-Mail oder Passwort.",
+      "cannot_connect": "Verbindung zur Hekr-Cloud fehlgeschlagen.",
+      "unknown": "Unerwarteter Fehler."
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits eingerichtet.",
+      "reauth_successful": "Erneute Anmeldung war erfolgreich."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Hekr-Hood-Optionen",
+        "data": {
+          "use_udp": "Lokale UDP-Steuerung verwenden (Befehle direkt im LAN senden)",
+          "checksum_mode": "Frame-Prüfsummen-Modus"
+        },
+        "data_description": {
+          "use_udp": "Wenn aktiv, werden Befehle an die LAN-IP des Geräts auf UDP-Port 10000 gesendet. Der Status kommt immer über die Cloud.",
+          "checksum_mode": "'Berechnet' folgt der offiziellen SDK. 'Null' bildet den Original-Adapter nach (letztes Byte 00) und dient nur zum Debuggen."
+        }
+      }
+    }
+  },
+  "selector": {
+    "checksum_mode": {
+      "options": {
+        "calc": "Berechnet (korrekt)",
+        "zero": "Null (Original-Adapter)"
+      }
+    }
+  },
+  "entity": {
+    "switch": {
+      "power": { "name": "Netzschalter" }
+    },
+    "light": {
+      "spotlight": { "name": "Strahler" },
+      "rgb": { "name": "RGB-Licht" }
+    },
+    "binary_sensor": {
+      "filter_change": { "name": "Filter wechseln" }
+    },
+    "button": {
+      "reset_filter": { "name": "Filterhinweis zurücksetzen" }
+    },
+    "number": {
+      "auto_off": { "name": "Abschalt-Timer" }
+    },
+    "sensor": {
+      "operating_state": {
+        "name": "Betriebszustand",
+        "state": {
+          "sleep": "Schlaf",
+          "standby": "Standby",
+          "on": "An"
+        }
+      }
+    }
+  }
+}
