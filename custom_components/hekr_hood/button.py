@@ -15,9 +15,9 @@ from .coordinator import HekrConfigEntry
 from .entity import HekrEntity
 
 # The author's README states that writing the 'cleaning' field to 0 clears the
-# filter-change reminder (command cmdId 6, rest_Cleaning). The enumeration also
-# allows 1; this value could not be verified against the physical hood (offline
-# during development). Change here if 0 proves ineffective on your unit.
+# filter-change reminder (command cmdId 6, rest_Cleaning). Verified on real
+# hardware (2026-11-14): sending this reset cleared the hood's filter indicator.
+# The enumeration also allows 1; 0 is kept as the documented, working value.
 _RESET_VALUE = 0
 
 
