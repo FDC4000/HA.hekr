@@ -89,12 +89,16 @@ Download **Settings → Devices & Services → Hekr Hood → ⋮ → Download di
 to inspect state. All secrets (password, tokens, `ctrlKey`, product key, LAN IP)
 are redacted.
 
-### If local UDP commands do nothing
+### Local UDP control and checksum
 
-The original adapter hard-coded the frame checksum to `00`; the cloud tolerates
-this but a device addressed directly on the LAN likely does not. Keep checksum
-mode on **Calculated** for local control. If a command still has no effect,
-temporarily switch to **Zero** to compare behaviour and report back.
+Verified on real hardware (2026-11-14): with **Use local UDP control** enabled and
+checksum mode **Calculated**, a command sent to the hood's LAN IP on UDP port
+10000 is executed and reflected almost immediately — notably faster than the
+cloud path, with no `uart timeout` delay. The device validates the checksum on
+the LAN (the cloud re-signs it, so the original adapter's hard-coded `00` only
+works via the cloud). Therefore keep checksum mode on **Calculated** for local
+control; **Zero** is cloud-only and for debugging. Local UDP requires Home
+Assistant to be on the same subnet as the hood.
 
 ### Commands are slow / `uart timeout` in the log
 
