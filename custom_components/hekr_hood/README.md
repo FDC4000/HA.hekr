@@ -96,6 +96,17 @@ this but a device addressed directly on the LAN likely does not. Keep checksum
 mode on **Calculated** for local control. If a command still has no effect,
 temporarily switch to **Zero** to compare behaviour and report back.
 
+### Commands are slow / `uart timeout` in the log
+
+Confirmed on real hardware: a command can take noticeably long to take effect,
+and the cloud often returns `appSendResp code 2000105 "uart timeout"` **even when
+the command actually succeeds** — the hood's controller acknowledges slowly. The
+integration does not treat this as an error: it sends the frame and waits for the
+device's own status push (`devSend`), so the matching entity may update a few
+seconds after you act. A command sent while the hood's controller is asleep
+(Wi-Fi `online` but no recent activity) may be dropped — operate the hood once to
+wake it.
+
 ### Known limitations / open points
 
 - **RGB frame varies by model.** M002 sends `[RGB_Sw, R, G, B]`; some M001
