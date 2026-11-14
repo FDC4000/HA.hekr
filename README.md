@@ -6,8 +6,8 @@ Home Assistant custom integration for **KKT Kolbe / Wisen** range hoods on the
 Ported from the [`ioBroker.hekr`](https://github.com/TA2k/ioBroker.hekr) adapter
 by TA2k (MIT License).
 
-> The original ioBroker adapter code has been removed from this branch; this
-> repository now contains the Home Assistant integration only.
+> The original ioBroker adapter code has been removed; this repository now
+> contains the Home Assistant integration only.
 
 ## Layout
 
@@ -27,6 +27,11 @@ requirements-test.txt          # test dependencies
 
 Full installation, configuration and debugging notes:
 [`custom_components/hekr_hood/README.md`](custom_components/hekr_hood/README.md).
+
+## Adding new devices
+
+To integrate additional Hekr/Wisen devices (new models or device types), see the
+companion guide: <https://github.com/FDC4000/HA.hekr.add_device>.
 
 ## Development
 
