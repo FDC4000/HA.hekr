@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Hekr Hood",
+        "title": "Hekr / Wisen",
         "description": "Mit deinem Wisen-/Hekr-App-Konto anmelden.",
         "data": {
           "username": "E-Mail",

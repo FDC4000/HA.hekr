@@ -1,7 +1,13 @@
-# HA.hekr — Hekr Hood for Home Assistant
+# HA.hekr — Hekr / Wisen for Home Assistant
 
-Home Assistant custom integration for **KKT Kolbe / Wisen** range hoods on the
-**Hekr** cloud platform (tested: SOLO807SM, model M002).
+Home Assistant custom integration for devices on the **Hekr / Wisen** IoT cloud
+platform. These devices were controlled with the **Wisen App**.
+
+One such device is the **KKT Kolbe** range hood — older models used this cloud
+connection, and it is the reference device this integration was built and
+verified against (tested: **SOLO807SM**, model **M002**). The integration is not
+limited to hoods: other Hekr/Wisen device types can be added (see
+[Adding new devices](#adding-new-devices)).
 
 Ported from the [`ioBroker.hekr`](https://github.com/TA2k/ioBroker.hekr) adapter
 by TA2k (MIT License).
@@ -12,21 +18,21 @@ by TA2k (MIT License).
 ## Layout
 
 ```
-custom_components/hekr_hood/   # the integration
+custom_components/hekr_wisen/   # the integration
 tests/                         # pytest suite (mocked network)
 requirements-test.txt          # test dependencies
 ```
 
 ## Quick start
 
-1. Copy `custom_components/hekr_hood/` into your Home Assistant
+1. Copy `custom_components/hekr_wisen/` into your Home Assistant
    `/config/custom_components/` directory.
 2. Restart Home Assistant.
-3. **Settings → Devices & Services → + Add Integration → Hekr Hood**, then sign
+3. **Settings → Devices & Services → + Add Integration → Hekr / Wisen**, then sign
    in with your Wisen app email and password.
 
 Full installation, configuration and debugging notes:
-[`custom_components/hekr_hood/README.md`](custom_components/hekr_hood/README.md).
+[`custom_components/hekr_wisen/README.md`](custom_components/hekr_wisen/README.md).
 
 ## Adding new devices
 

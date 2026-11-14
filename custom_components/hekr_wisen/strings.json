@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Hekr Hood",
+        "title": "Hekr / Wisen",
         "description": "Sign in with your Wisen / Hekr app account.",
         "data": {
           "username": "Email",
@@ -30,7 +30,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Hekr Hood options",
+        "title": "Hekr / Wisen options",
         "data": {
           "use_udp": "Use local UDP control (send commands directly on the LAN)",
           "checksum_mode": "Frame checksum mode"

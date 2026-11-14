@@ -1,6 +1,6 @@
 {
-  "domain": "hekr_hood",
-  "name": "Hekr Hood (KKT Kolbe / Wisen)",
+  "domain": "hekr_wisen",
+  "name": "Hekr / Wisen (KKT Kolbe)",
   "version": "0.1.0",
   "codeowners": ["@FDC4000"],
   "config_flow": true,

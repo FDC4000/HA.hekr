@@ -1,4 +1,4 @@
-# Test dependencies for the hekr_hood Home Assistant integration.
+# Test dependencies for the hekr_wisen Home Assistant integration.
 # Install into a venv:  pip install -r requirements-test.txt
 homeassistant==2026.10.4
 pytest-homeassistant-custom-component

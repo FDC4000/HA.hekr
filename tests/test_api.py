@@ -11,12 +11,12 @@ import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from custom_components.hekr_hood.api import (
+from custom_components.hekr_wisen.api import (
     HekrAuthError,
     HekrCloudApi,
     HekrConnectionError,
 )
-from custom_components.hekr_hood.const import DEVICE_URL, LOGIN_URL
+from custom_components.hekr_wisen.const import DEVICE_URL, LOGIN_URL
 
 
 async def test_login_success(hass: HomeAssistant, aioclient_mock, login_response):
