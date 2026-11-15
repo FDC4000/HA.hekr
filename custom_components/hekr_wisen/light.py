@@ -65,7 +65,14 @@ class HekrSpotlight(HekrEntity, LightEntity):
 
 
 class HekrRgbLight(HekrEntity, LightEntity):
-    """RGB decorative light (RGB_Sw + R/G/B)."""
+    """RGB decorative light (RGB_Sw + R/G/B).
+
+    The device has no separate brightness channel — the colour bytes carry the
+    intensity. Home Assistant requires a brightness channel for any colour mode
+    other than on/off, so we expose ``rgb_color`` normalised to full brightness
+    and derive ``brightness`` from the brightest channel. Commands scale the
+    chosen colour by the chosen brightness before sending.
+    """
 
     _attr_translation_key = "rgb"
     _attr_color_mode = ColorMode.RGB
@@ -79,8 +86,8 @@ class HekrRgbLight(HekrEntity, LightEntity):
     def is_on(self) -> bool:
         return bool(self._status.get(FIELD_RGB_SW))
 
-    @property
-    def rgb_color(self) -> tuple[int, int, int]:
+    def _device_rgb(self) -> tuple[int, int, int]:
+        """Raw R/G/B as reported by the device (0-255 each)."""
         status = self._status
         return (
             int(status.get(FIELD_R, 0) or 0),
@@ -90,15 +97,37 @@ class HekrRgbLight(HekrEntity, LightEntity):
 
     @property
     def brightness(self) -> int | None:
-        # Device exposes no brightness channel; colour carries the intensity.
-        return None
+        """Intensity = the brightest raw channel."""
+        value = max(self._device_rgb())
+        if value:
+            return value
+        return 255 if self.is_on else None
+
+    @property
+    def rgb_color(self) -> tuple[int, int, int]:
+        """Colour normalised to full brightness (hue/saturation only)."""
+        red, green, blue = self._device_rgb()
+        scale = max(red, green, blue)
+        if scale == 0:
+            return (255, 255, 255)
+        return (
+            round(red * 255 / scale),
+            round(green * 255 / scale),
+            round(blue * 255 / scale),
+        )
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        from homeassistant.components.light import ATTR_RGB_COLOR
+        from homeassistant.components.light import ATTR_BRIGHTNESS, ATTR_RGB_COLOR
 
-        red, green, blue = kwargs.get(ATTR_RGB_COLOR, self.rgb_color)
+        rgb = kwargs.get(ATTR_RGB_COLOR, self.rgb_color)
+        brightness = kwargs.get(ATTR_BRIGHTNESS)
+        if brightness is None:
+            brightness = self.brightness or 255
+
+        scale = brightness / 255
+        red, green, blue = (round(component * scale) for component in rgb)
         if (red, green, blue) == (0, 0, 0):
-            # Avoid turning on to black; default to white.
+            # Avoid turning on to black; default to full white.
             red = green = blue = 255
         await self._async_send(
             protocol.frame_set_rgbw(
@@ -112,7 +141,7 @@ class HekrRgbLight(HekrEntity, LightEntity):
         )
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        red, green, blue = self.rgb_color
+        red, green, blue = self._device_rgb()
         await self._async_send(
             protocol.frame_set_rgbw(
                 red,

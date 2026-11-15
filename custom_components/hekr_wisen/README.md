@@ -118,6 +118,12 @@ wake it.
 - **RGB frame varies by model.** M002 sends `[RGB_Sw, R, G, B]`; some M001
   variants expect only `[R, G, B]`. The integration picks the layout from the
   reported `model`. If your RGB light misbehaves, note your model.
+- **Colour wheel saturation.** The device takes raw R/G/B, so only the
+  fully-saturated **outer rim** of Home Assistant's colour wheel produces pure
+  colours; dragging toward the centre mixes in white (most visible on red,
+  which washes out to pink). Pick the hue at the rim and use the separate
+  **brightness** slider to dim — this keeps the colour pure instead of
+  desaturating it.
 - **Filter reset value is unverified.** Per TA2k's README, writing `cleaning`
   to `0` clears the reminder; the button uses `0`. If your hood needs `1`,
   change `_RESET_VALUE` in `button.py`.
