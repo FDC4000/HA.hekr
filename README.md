@@ -23,7 +23,25 @@ tests/                         # pytest suite (mocked network)
 requirements-test.txt          # test dependencies
 ```
 
-## Quick start
+## Installation
+
+### HACS (recommended)
+
+This repository is not in the HACS default store, so add it as a **custom
+repository**:
+
+1. In Home Assistant open **HACS**.
+2. Top-right **⋮ → Custom repositories**.
+3. **Repository:** `https://github.com/FDC4000/HA.hekr` — **Type:** `Integration`
+   → **Add**.
+4. Search for **Hekr / Wisen** in HACS, open it and click **Download**.
+5. **Restart Home Assistant.**
+6. **Settings → Devices & Services → + Add Integration → Hekr / Wisen**, then
+   sign in with your Wisen app email and password.
+
+HACS then offers updates whenever a new release is published here.
+
+### Manual
 
 1. Copy `custom_components/hekr_wisen/` into your Home Assistant
    `/config/custom_components/` directory.

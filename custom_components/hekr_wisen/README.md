@@ -33,6 +33,11 @@ the config entry so local commands keep working without re-querying the cloud.
 
 ## Installation (Home Assistant Container / Docker, no Supervisor)
 
+> **Via HACS:** add `https://github.com/FDC4000/HA.hekr` as a custom repository
+> (type *Integration*), download **Hekr / Wisen**, restart, then add the
+> integration. See the [repository README](../../README.md#installation) for
+> the full HACS steps. The manual steps below are the alternative.
+
 1. Copy the integration into your config folder so you end up with:
 
    ```
