@@ -1,12 +1,12 @@
 {
   "domain": "hekr_wisen",
   "name": "Hekr / Wisen (KKT Kolbe)",
-  "version": "0.1.0",
   "codeowners": ["@FDC4000"],
   "config_flow": true,
   "documentation": "https://github.com/FDC4000/HA.hekr",
   "integration_type": "hub",
   "iot_class": "cloud_push",
   "issue_tracker": "https://github.com/FDC4000/HA.hekr/issues",
-  "requirements": []
+  "requirements": [],
+  "version": "0.1.0"
 }
