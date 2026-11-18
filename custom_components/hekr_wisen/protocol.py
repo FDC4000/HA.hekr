@@ -25,6 +25,7 @@ from collections.abc import Sequence
 
 from .const import (
     CHECKSUM_CALC,
+    CMD_QUERY,
     CMD_RESET_CLEANING,
     CMD_SET_LIGHT,
     CMD_SET_RGBW,
@@ -71,6 +72,16 @@ def build_frame(
 
 
 # --- High level command builders -----------------------------------------
+
+
+def frame_query(**kwargs: str) -> str:
+    """Request a full status report from the device (cmdId 0, no payload).
+
+    The transparent query command carries no data bytes. Devices that honour
+    it answer with their current status report; those that ignore it simply
+    send nothing, so this is safe to use as a best-effort refresh trigger.
+    """
+    return build_frame(CMD_QUERY, [], **kwargs)
 
 
 def frame_set_switch(on: bool, **kwargs: str) -> str:

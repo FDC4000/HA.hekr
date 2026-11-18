@@ -14,7 +14,7 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.event import async_call_later
@@ -35,6 +35,7 @@ from .const import (
 )
 from .local import async_send_local
 from .websocket import HekrWebsocket
+from . import protocol
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,6 +44,11 @@ type HekrConfigEntry = ConfigEntry["HekrCoordinator"]
 # Re-login a little before the token actually expires.
 _TOKEN_REFRESH_FACTOR = 0.9
 _DEFAULT_EXPIRES_IN = 86400
+
+# Delay the reconcile status query so the device has applied the command
+# before it reports, avoiding a race where the reply carries the pre-command
+# value and briefly overwrites the optimistic state.
+_REFRESH_DELAY = 1.5  # seconds
 
 
 class HekrCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
@@ -65,6 +71,7 @@ class HekrCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
         self._token: str | None = None
         self._available = False
         self._cancel_relogin = None
+        self._refresh_cancels: dict[str, CALLBACK_TYPE] = {}
         self.ws = HekrWebsocket(
             async_get_clientsession(hass),
             self._async_get_token,
@@ -87,6 +94,9 @@ class HekrCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
         if self._cancel_relogin is not None:
             self._cancel_relogin()
             self._cancel_relogin = None
+        for cancel in self._refresh_cancels.values():
+            cancel()
+        self._refresh_cancels.clear()
         await self.ws.stop()
         await super().async_shutdown()
 
@@ -145,12 +155,68 @@ class HekrCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
     # --- status push ------------------------------------------------------
 
     @callback
-    def _on_status(self, dev_tid: str, status: dict[str, Any]) -> None:
+    def _apply_status(self, dev_tid: str, status: dict[str, Any]) -> None:
+        """Merge a status fragment into a device's data and notify listeners."""
         merged = dict(self.data or {})
         current = dict(merged.get(dev_tid, {}))
         current.update(status)
         merged[dev_tid] = current
         self.async_set_updated_data(merged)
+
+    @callback
+    def _on_status(self, dev_tid: str, status: dict[str, Any]) -> None:
+        # Device-report entry point only (optimistic updates go through
+        # async_set_optimistic). Logs the raw report so a real devSend can be
+        # told apart from an optimistic write, and its exact field keys seen.
+        _LOGGER.debug("devSend report for %s: %s", dev_tid, status)
+        self._apply_status(dev_tid, status)
+
+    @callback
+    def async_set_optimistic(self, dev_tid: str, patch: dict[str, Any]) -> None:
+        """Apply an assumed state immediately after sending a command.
+
+        This is an optimistic update: the UI reflects the expected values at
+        once (0 s wait), and the device's next status report overwrites them
+        with reality (reconciliation). Identical merge semantics as an incoming
+        report, so a later report for the same fields simply replaces these.
+        """
+        if not patch:
+            return
+        self._apply_status(dev_tid, patch)
+
+    @callback
+    def async_request_device_refresh(self, dev_tid: str) -> None:
+        """Schedule a status query shortly after a command (reconciliation).
+
+        Sends the transparent query command (cmdId 0) after ``_REFRESH_DELAY``
+        so the real state is pulled in without waiting for the device's next
+        unsolicited report, while giving the device time to apply the command
+        first.
+
+        The pending query is tracked per device and debounced: a second command
+        within the delay cancels the still-pending query and reschedules, so
+        only one query fires ``_REFRESH_DELAY`` after the last command. All
+        pending timers are cancelled on shutdown, so a query never fires into a
+        torn-down entry. If the device ignores the query the optimistic state
+        still reconciles on a later report; failures are swallowed so a refresh
+        never breaks the command that triggered it.
+        """
+        existing = self._refresh_cancels.pop(dev_tid, None)
+        if existing is not None:
+            existing()
+
+        async def _query(_now) -> None:
+            self._refresh_cancels.pop(dev_tid, None)
+            try:
+                await self.async_send_raw(
+                    dev_tid, protocol.frame_query(checksum_mode=self.checksum_mode)
+                )
+            except Exception as err:  # noqa: BLE001 - refresh is strictly best effort
+                _LOGGER.debug("Status refresh request failed for %s: %s", dev_tid, err)
+
+        self._refresh_cancels[dev_tid] = async_call_later(
+            self.hass, _REFRESH_DELAY, _query
+        )
 
     @callback
     def _on_availability(self, available: bool) -> None:

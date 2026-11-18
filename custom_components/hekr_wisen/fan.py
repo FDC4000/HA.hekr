@@ -89,4 +89,4 @@ class HekrFan(HekrEntity, FanEntity):
         raw = protocol.frame_set_speed(
             speed, checksum_mode=self.coordinator.checksum_mode
         )
-        await self._async_send(raw)
+        await self._async_send(raw, optimistic={FIELD_SPEED: speed})

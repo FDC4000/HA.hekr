@@ -55,12 +55,14 @@ class HekrSpotlight(HekrEntity, LightEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         await self._async_send(
-            protocol.frame_set_light(True, checksum_mode=self.coordinator.checksum_mode)
+            protocol.frame_set_light(True, checksum_mode=self.coordinator.checksum_mode),
+            optimistic={FIELD_LIGHT: 1},
         )
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self._async_send(
-            protocol.frame_set_light(False, checksum_mode=self.coordinator.checksum_mode)
+            protocol.frame_set_light(False, checksum_mode=self.coordinator.checksum_mode),
+            optimistic={FIELD_LIGHT: 0},
         )
 
 
@@ -137,7 +139,13 @@ class HekrRgbLight(HekrEntity, LightEntity):
                 rgb_on=True,
                 model=self.coordinator.model_for(self._dev_tid),
                 checksum_mode=self.coordinator.checksum_mode,
-            )
+            ),
+            optimistic={
+                FIELD_RGB_SW: 1,
+                FIELD_R: red,
+                FIELD_G: green,
+                FIELD_B: blue,
+            },
         )
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -150,5 +158,6 @@ class HekrRgbLight(HekrEntity, LightEntity):
                 rgb_on=False,
                 model=self.coordinator.model_for(self._dev_tid),
                 checksum_mode=self.coordinator.checksum_mode,
-            )
+            ),
+            optimistic={FIELD_RGB_SW: 0},
         )

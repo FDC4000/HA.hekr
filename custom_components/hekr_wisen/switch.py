@@ -49,4 +49,4 @@ class HekrPowerSwitch(HekrEntity, SwitchEntity):
 
     async def _async_switch(self, on: bool) -> None:
         raw = protocol.frame_set_switch(on, checksum_mode=self.coordinator.checksum_mode)
-        await self._async_send(raw)
+        await self._async_send(raw, optimistic={FIELD_SW: 1 if on else 0})

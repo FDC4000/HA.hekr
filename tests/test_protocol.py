@@ -124,3 +124,22 @@ def test_byte_value_out_of_range():
 
     with pytest.raises(ValueError):
         protocol.build_frame(2, [256])
+
+
+def test_query_frame_has_no_payload():
+    # Query (cmdId 0) carries no data bytes: 48 06 02 00 00 <cksum>.
+    frame = protocol.frame_query(checksum_mode=const.CHECKSUM_CALC)
+    raw = bytes.fromhex(frame)
+    assert raw[0] == const.FRAME_HEADER
+    assert raw[1] == 0x06  # base length, zero data bytes
+    assert raw[2] == const.FRAME_TYPE_CONTROL
+    assert raw[4] == const.CMD_QUERY
+    assert len(raw) == 6
+    # sum(48 06 02 00 00) & 0xff == 0x50
+    assert frame == "480602000050"
+    assert raw[-1] == _checksum(frame)
+
+
+def test_query_frame_zero_checksum():
+    frame = protocol.frame_query(checksum_mode=const.CHECKSUM_ZERO)
+    assert frame == "480602000000"

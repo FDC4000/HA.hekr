@@ -50,4 +50,4 @@ class HekrTimer(HekrEntity, NumberEntity):
         raw = protocol.frame_set_timer(
             int(value), checksum_mode=self.coordinator.checksum_mode
         )
-        await self._async_send(raw)
+        await self._async_send(raw, optimistic={FIELD_TIMER: int(value)})

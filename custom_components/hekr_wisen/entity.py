@@ -42,6 +42,18 @@ class HekrEntity(CoordinatorEntity[HekrCoordinator]):
         """Available only while the cloud WebSocket is connected."""
         return self.coordinator.available and super().available
 
-    async def _async_send(self, raw: str) -> None:
-        """Send a raw frame; the device reports the new state back via push."""
+    async def _async_send(
+        self, raw: str, *, optimistic: dict[str, Any] | None = None
+    ) -> None:
+        """Send a raw frame, assume the new state, then reconcile.
+
+        The command is sent first. On success the assumed state (``optimistic``)
+        is applied immediately so the UI reacts at 0 s, and a status refresh is
+        scheduled (shortly after) so the device's real state is pulled in
+        without waiting for its next periodic report. If the device later
+        reports different values, that report overwrites the assumed one.
+        """
         await self.coordinator.async_send_raw(self._dev_tid, raw)
+        if optimistic:
+            self.coordinator.async_set_optimistic(self._dev_tid, optimistic)
+        self.coordinator.async_request_device_refresh(self._dev_tid)

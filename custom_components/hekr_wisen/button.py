@@ -11,6 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import protocol
+from .const import FIELD_FILTER
 from .coordinator import HekrConfigEntry
 from .entity import HekrEntity
 
@@ -44,4 +45,6 @@ class HekrFilterResetButton(HekrEntity, ButtonEntity):
         raw = protocol.frame_reset_cleaning(
             _RESET_VALUE, checksum_mode=self.coordinator.checksum_mode
         )
-        await self._async_send(raw)
+        # Resetting clears the filter-change reminder; assume the indicator is
+        # off at once, the device's next report reconciles it.
+        await self._async_send(raw, optimistic={FIELD_FILTER: 0})

@@ -6,13 +6,18 @@ https://github.com/tonylofgren/aurora-smart-home
 
 from __future__ import annotations
 
+from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from homeassistant.util import dt as dt_util
+from pytest_homeassistant_custom_component.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+)
 
 from custom_components.hekr_wisen.const import DATA_DEVICES, DEVICE_URL, DOMAIN, LOGIN_URL
 
@@ -109,5 +114,131 @@ async def test_command_builds_correct_frame(
         "switch", "turn_on", {"entity_id": power_id}, blocking=True
     )
 
-    # Default checksum mode is "calc": frame_set_switch(True) == 48070200020154
-    assert _FakeWS.instances[-1].sent[-1][2] == "48070200020154"
+    # Default checksum mode is "calc". The command frame is sent at once; the
+    # reconcile status query (cmdId 0) follows after the refresh delay.
+    sent = _FakeWS.instances[-1].sent
+    assert [raw for _tid, _key, raw in sent] == ["48070200020154"]
+
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+    assert [raw for _tid, _key, raw in sent] == ["48070200020154", "480602000050"]
+
+
+async def test_optimistic_state_applied_immediately(
+    hass, aioclient_mock, mock_entry, login_response, device_response
+):
+    """Turning on updates the UI at once, before any device report arrives."""
+    await _setup(hass, aioclient_mock, mock_entry, login_response, device_response)
+    reg = er.async_get(hass)
+    power_id = reg.async_get_entity_id("switch", DOMAIN, f"{_DEV_TID}_power")
+    assert hass.states.get(power_id).state == "off"
+
+    await hass.services.async_call(
+        "switch", "turn_on", {"entity_id": power_id}, blocking=True
+    )
+    await hass.async_block_till_done()
+
+    # No _on_status push happened — the "on" state is purely optimistic.
+    assert hass.states.get(power_id).state == "on"
+
+    # Flush the pending reconcile-query timer so it does not linger.
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+
+
+async def test_real_report_reconciles_optimistic_state(
+    hass, aioclient_mock, mock_entry, login_response, device_response
+):
+    """A later device report overwrites the optimistically assumed state."""
+    await _setup(hass, aioclient_mock, mock_entry, login_response, device_response)
+    coordinator = mock_entry.runtime_data
+    reg = er.async_get(hass)
+    power_id = reg.async_get_entity_id("switch", DOMAIN, f"{_DEV_TID}_power")
+
+    await hass.services.async_call(
+        "switch", "turn_on", {"entity_id": power_id}, blocking=True
+    )
+    await hass.async_block_till_done()
+    assert hass.states.get(power_id).state == "on"
+
+    # Device actually reports it is still off -> optimistic value is replaced.
+    coordinator._on_status(_DEV_TID, {"sw": 0, "Statue": 2})
+    await hass.async_block_till_done()
+    assert hass.states.get(power_id).state == "off"
+
+    # Flush the pending reconcile-query timer so it does not linger.
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+
+
+async def test_rgb_turn_on_is_optimistic(
+    hass, aioclient_mock, mock_entry, login_response, device_response
+):
+    """The RGB light reflects colour and on-state immediately on turn_on."""
+    await _setup(hass, aioclient_mock, mock_entry, login_response, device_response)
+    reg = er.async_get(hass)
+    rgb_id = reg.async_get_entity_id("light", DOMAIN, f"{_DEV_TID}_rgb")
+
+    await hass.services.async_call(
+        "light",
+        "turn_on",
+        {"entity_id": rgb_id, "rgb_color": [255, 0, 0]},
+        blocking=True,
+    )
+    await hass.async_block_till_done()
+
+    state = hass.states.get(rgb_id)
+    assert state.state == "on"
+    assert state.attributes["rgb_color"] == (255, 0, 0)
+
+    # Flush the pending reconcile-query timer so it does not linger.
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+
+
+async def test_refresh_query_debounced_across_commands(
+    hass, aioclient_mock, mock_entry, login_response, device_response
+):
+    """A second command within the delay cancels the first pending query."""
+    await _setup(hass, aioclient_mock, mock_entry, login_response, device_response)
+    reg = er.async_get(hass)
+    power_id = reg.async_get_entity_id("switch", DOMAIN, f"{_DEV_TID}_power")
+
+    await hass.services.async_call(
+        "switch", "turn_on", {"entity_id": power_id}, blocking=True
+    )
+    await hass.services.async_call(
+        "switch", "turn_off", {"entity_id": power_id}, blocking=True
+    )
+    await hass.async_block_till_done()
+
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+
+    frames = [raw for _tid, _key, raw in _FakeWS.instances[-1].sent]
+    # Two command frames, but only a single reconcile query fires.
+    assert frames == ["48070200020154", "48070200020053", "480602000050"]
+
+
+async def test_unload_cancels_pending_refresh(
+    hass, aioclient_mock, mock_entry, login_response, device_response
+):
+    """Unloading the entry cancels a still-pending reconcile query."""
+    await _setup(hass, aioclient_mock, mock_entry, login_response, device_response)
+    reg = er.async_get(hass)
+    power_id = reg.async_get_entity_id("switch", DOMAIN, f"{_DEV_TID}_power")
+
+    await hass.services.async_call(
+        "switch", "turn_on", {"entity_id": power_id}, blocking=True
+    )
+    await hass.async_block_till_done()
+
+    assert await hass.config_entries.async_unload(mock_entry.entry_id)
+    await hass.async_block_till_done()
+
+    # Timer was cancelled on shutdown -> firing it does nothing.
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=2))
+    await hass.async_block_till_done()
+
+    frames = [raw for _tid, _key, raw in _FakeWS.instances[-1].sent]
+    assert frames == ["48070200020154"]  # command only, no query
